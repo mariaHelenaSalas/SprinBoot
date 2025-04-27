@@ -16,7 +16,7 @@ public class ProductRepository {
     public void init() {
         products.add(new Product(1L, "equipo", "Periféricos", 200.000, 20));
         products.add(new Product(2L, "cama", "Periféricos", 50.000, 15));
-        products.add(new Product(3L, "sofa", "prefericos", 100.000, 30));
+        products.add(new Product(3L, "sofa", "Periféricos", 100.000, 30));
         products.add(new Product(4L, "televisor", "Electrodomesticos", 500.000, 10));
         products.add(new Product(5L, "nevera", "Electrodomesticos", 300.000, 5));
         products.add(new Product(6L, "lavadora", "Electrodomesticos", 400.000, 8));
@@ -25,9 +25,9 @@ public class ProductRepository {
         products.add(new Product(9L, "ventilador", "Electrodomesticos", 80.000, 20));
         products.add(new Product(10L, "calefactor", "Electrodomesticos", 120.000, 15));         
         products.add(new Product(11L, "aire acondicionado", "Electrodomesticos", 600.000, 3));      
-        products.add(new Product(12L, "aspiradora", "Elect      rodomesticos", 200.000, 10));
+        products.add(new Product(12L, "aspiradora", "Electrodomesticos", 200.000, 10));
         products.add(new Product(13L, "licuadora", "Electrodomesticos", 100.000, 25));
-        products.add(new Product(14L, "batidora", "Elect    rodomesticos", 80.000, 30));
+        products.add(new Product(14L, "batidora", "Electrodomesticos", 80.000, 30));
         products.add(new Product(15L, "tostadora", "Electrodomesticos", 50.000, 40));
         products.add(new Product(16L, "cafetera", "Electrodomesticos", 70.000, 35));
         products.add(new Product(17L, "plancha", "Electrodomesticos", 40.000, 50));     
