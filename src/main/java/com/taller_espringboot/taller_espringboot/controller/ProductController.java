@@ -30,7 +30,7 @@ public class ProductController {
         @RequestParam(required = false) Double maxPrice,
         @RequestParam(required = false) String category,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "18") int size
     ) {
         return repo.findAll().stream()
             .filter(p -> minPrice == null || p.getPrice() >= minPrice)
