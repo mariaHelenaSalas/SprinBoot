@@ -2,56 +2,41 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Productos</title>
-    <link rel="stylesheet" th:href="@{/style.css}"> <!-- Esto carga tu CSS -->
+    <title>TechZone - Productos</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
+    <h1>Productos TechZone</h1>
 
-<h1 style="text-align: center;">Lista De Productos</h1>
+    <form method="get" action="/">
+        <input type="number" name="minPrice" placeholder="Precio mínimo" th:value="${param.minPrice}" />
+        <input type="number" name="maxPrice" placeholder="Precio máximo" th:value="${param.maxPrice}" />
+        <select name="category">
+            <option value="">Todas</option>
+            <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}" 
+                    th:selected="${cat == param.category}"></option>
+        </select>
+        <button type="submit">Filtrar</button>
+        <a href="/">Limpiar</a>
+    </form>
 
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${productos}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.name}"></td>
+                <td th:text="${p.category}"></td>
+                <td th:text="${p.price}"></td>
+                <td th:text="${p.stock}"></td>
+            </tr>
+        </tbody>
+    </table>
 
-<form method="get" action="/">
-    <input type="number" name="minPrice" step="0.01" placeholder="Precio Mínimo"
-      th:value="${param.minPrice}"/>
-    <input type="number" name="maxPrice" step="0.01" placeholder="Precio Máximo"
-      th:value="${param.maxPrice}"/>
-    <select name="category">
-      <option value="">Todas</option>
-      <option th:each="cat : ${categories}"
-              th:value="${cat}"
-              th:text="${cat}"
-              th:selected="${cat == param.category}">
-      </option>
-    </select>
-    <button type="submit">Filtrar</button>
-    <a href="/" style="margin-left:8px;">Limpiar</a>
-  </form>
-
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Stock</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Recorremos la lista de productos -->
-        <tr th:each="producto : ${productos}">
-            <td th:text="${producto.id}"></td>
-            <td th:text="${producto.name}"></td>
-            <td th:text="${producto.category}"></td>
-            <td th:text="${producto.price}"></td>
-            <td th:text="${producto.stock}"></td>
-        </tr>
-    </tbody>
-</table>
-
-<div th:if="${#lists.isEmpty(productos)}" style="text-align: center; margin-top: 20px; color: red; font-weight: bold;">
-    No se encontraron productos con esos filtros.
-</div>
-
+    <div th:if="${#lists.isEmpty(productos)}" class="empty-msg">
+        No se encontraron productos con esos filtros.
+    </div>
 </body>
 </html>

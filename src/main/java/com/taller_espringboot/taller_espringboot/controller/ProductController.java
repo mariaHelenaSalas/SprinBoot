@@ -1,17 +1,20 @@
 package com.taller_espringboot.taller_espringboot.controller;
 
-import com.taller_espringboot.taller_espringboot.model.Product;
-import com.taller_espringboot.taller_espringboot.repository.ProductRepository;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-@Controller
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.taller_espringboot.taller_espringboot.model.Product;
+import com.taller_espringboot.taller_espringboot.repository.ProductRepository;
+
+@RestController
+@RequestMapping("/api")
 public class ProductController {
 
     private final ProductRepository repo;
@@ -20,26 +23,40 @@ public class ProductController {
         this.repo = repo;
     }
 
-    @GetMapping("/")
-    public String index(
+    // 1) Listar productos con filtros y paginación
+    @GetMapping("/products")
+    public List<Product> getProducts(
         @RequestParam(required = false) Double minPrice,
         @RequestParam(required = false) Double maxPrice,
         @RequestParam(required = false) String category,
-        Model model
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
     ) {
-        List<Product> productosFiltrados = repo.findAll().stream()
+        return repo.findAll().stream()
             .filter(p -> minPrice == null || p.getPrice() >= minPrice)
             .filter(p -> maxPrice == null || p.getPrice() <= maxPrice)
-            .filter(p -> category == null || category.isEmpty() || p.getCategory().equalsIgnoreCase(category))
+            .filter(p -> category == null || p.getCategory().equalsIgnoreCase(category))
+            .skip((long) page * size)
+            .limit(size)
             .collect(Collectors.toList());
+    }
 
-        Set<String> categorias = repo.findAll().stream()
-            .map(Product::getCategory)
-            .collect(Collectors.toSet());
+    // 2) Estadísticas de precios
+    @GetMapping("/products/stats")
+    public Map<String, Double> getStats(
+        @RequestParam(required = false) String category
+    ) {
+        DoubleSummaryStatistics stats = repo.findAll().stream()
+            .filter(p -> category == null || p.getCategory().equalsIgnoreCase(category))
+            .mapToDouble(Product::getPrice)
+            .summaryStatistics();
 
-        model.addAttribute("productos", productosFiltrados);
-        model.addAttribute("categories", categorias);
-
-        return "index"; // El nombre del archivo en templates (index.html)
+        return Map.of(
+            "count", (double) stats.getCount(),
+            "avgPrice", stats.getAverage(),
+            "minPrice", stats.getMin(),
+            "maxPrice", stats.getMax(),
+            "totalValue", stats.getSum()
+        );
     }
 }
